@@ -18,9 +18,8 @@ __global__ void matMul(int N, _DOUBLE_ *C, _DOUBLE_ *A, _DOUBLE_ *B) {
     _DOUBLE_ Cij = 0;
     for (int kk=0;kk<N;kk+=TK) {
         for (int k = kk;k<min(kk+TK,N);++k) {
-            if (k>N) break;
             Cij += A[(ii*TK+i)*N + k] * B[k*N+jj*TK+j]; 
         }
-        C[(ii*TK+i)*N + jj*TK+j] = Cij;
     }
+    C[(ii*TK+i)*N + jj*TK+j] = Cij;
 }
