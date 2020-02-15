@@ -1,22 +1,26 @@
 // Matrix multiply device code
 #include <assert.h>
 #include <math.h>
+#include <algorithm>
 #include "utils.h"
 #include "types.h"
 using namespace std;
 
 __global__ void matMul(int N, _DOUBLE_ *C, _DOUBLE_ *A, _DOUBLE_ *B) {
+    int i = threadIdx.y;
+    int j = threadIdx.x;
 
-    int I =  blockIdx.y*blockDim.y + threadIdx.y;
-    int J =  blockIdx.x*blockDim.x + threadIdx.x;
+    int ii = blockIdx.y;
+    int jj = blockIdx.x;
 
-    if((I < N) && (J < N)){
-        _DOUBLE_ _c = 0;
-        for (unsigned int k = 0; k < N; k++) {
-            _DOUBLE_ a = A[I * N + k];
-            _DOUBLE_ b = B[k * N + J];
-            _c += a * b;
+    int TK = blockDim.x;
+    
+    _DOUBLE_ Cij = 0;
+    for (int kk=0;kk<N;kk+=TK) {
+        for (int k = kk;k<min(kk+TK,N);++k) {
+            if (k>N) break;
+            Cij += A[(ii*TK+i)*N + k] * B[k*N+jj*TK+j]; 
         }
-        C[I * N + J] = _c;
+        C[(ii*TK+i)*N + jj*TK+j] = Cij;
     }
 }
