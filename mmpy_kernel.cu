@@ -31,8 +31,8 @@ __global__ void matMul(int N, _DOUBLE_ *C, _DOUBLE_ *A, _DOUBLE_ *B) {
     _DOUBLE_ Cij[8] = {0,0,0,0,0,0,0,0};
 
     int nBLOCK_SIZE = N/BLOCK_SIZE;
-//#pragma unroll 4
-    for (int kk=0;kk<nBLOCK_SIZE;kk+=1) { // should be less than or equal to, right?
+#pragma unroll 4
+    for (unsigned int kk=0;kk<nBLOCK_SIZE;kk+=1) { // should be less than or equal to, right?
         As0[ty][tx] = A[I0_0*N + kk*BLOCK_SIZE+tx];
         As0[ty+4][tx] = A[I0_4*N + kk*BLOCK_SIZE+tx];
         As0[ty+8][tx] = A[I0_8*N + kk*BLOCK_SIZE+tx];
@@ -53,8 +53,8 @@ __global__ void matMul(int N, _DOUBLE_ *C, _DOUBLE_ *A, _DOUBLE_ *B) {
         Bs0[ty+28][tx] = B[(kk*BLOCK_SIZE+ty+28)*N + J0];
 
         __syncthreads();
-//#pragma unroll 32  
-        for (int k=0;k<BLOCK_SIZE;++k) {
+#pragma unroll 32  
+        for (unsigned int k=0;k<BLOCK_SIZE;++k) {
             Cij[0] += As0[ty][k] * Bs0[k][tx];
             Cij[1] += As0[ty+4][k] * Bs0[k][tx];
             Cij[2] += As0[ty+8][k] * Bs0[k][tx];
