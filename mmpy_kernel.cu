@@ -132,6 +132,20 @@ __global__ void matMul(int N, _DOUBLE_ *C, _DOUBLE_ *A, _DOUBLE_ *B) {
                 _c += A[I0 * N + k]*B[k * N + J0];
             }
             C[I0 * N + J0] = _c;
+        } 
+        if((I0 < N) && (J1 < N)){
+            _DOUBLE_ _c = 0;
+            for (int k = 0; k < N; k++) {
+                _c += A[I0 * N + k]*B[k * N + J1];
+            }
+            C[I0 * N + J1] = _c;
+        }    
+        if((I1 < N) && (J0 < N)){
+            _DOUBLE_ _c = 0;
+            for (int k = 0; k < N; k++) {
+                _c += A[I1 * N + k]*B[k * N + J0];
+            }
+            C[I1 * N + J0] = _c;
         }    
         if((I1 < N) && (J1 < N)){
             _DOUBLE_ _c = 0;
