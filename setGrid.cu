@@ -10,5 +10,5 @@ void setGrid(int n, dim3 &blockDim, dim3 &gridDim)
    if(n % blockDim.y != 0)
         gridDim.y++;    
    
-   blockDim.y = blockDim.y/4;
+   blockDim.y = blockDim.y/8;
 }
