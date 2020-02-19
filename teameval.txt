@@ -12,30 +12,34 @@ worked together and what to write for the evaluation.
 
 (1) List the names of your team members:
 
-A:
+A: Mridul Kavidayal
 
  
-B:
+B: Pushpak Raj Gautam
 
  
  
 (2) Estimate how much time each team member devoted to this project, in HOURS.
 
   	                        A 	       B
-meetings 	  	  	 
-coding 	  	  	 
-writeup 	  	  	 
-planning (alone) 	  	  	 
-total (including meetings) 	  	  	 
+meetings 	  	  	 		4			4
+coding						40			40 	  	  	 
+writeup 	  	  	 		10			10
+planning (alone) 	  	  	 4			4	
+total (including meetings) 	 58			58 	  	 
 
 
 (3) Describe 
   (a) what the major responsibilities of each team member were;
+  pair programming
   (b) whether or not you completed the assignment;
+  yes
   (c) the major strengths and weaknesses in your team, e.g. how
       your team worked together;
-  (d) the lessons learned from these events;
-  (e) whether and how you plan to change the way your work together and
+  good collaboration.
+  (d) the lessons learned from these events; 
+  working together is fun!
+  (e) whether and how you plan to change the way your work together and 
+  NA
   (f) anything else that comes to mind.
-
-
+  NA
