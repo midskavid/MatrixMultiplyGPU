@@ -22,24 +22,31 @@ B: Pushpak Raj Gautam
 (2) Estimate how much time each team member devoted to this project, in HOURS.
 
   	                        A 	       B
-meetings 	  	  	 		4			4
-coding						40			40 	  	  	 
-writeup 	  	  	 		10			10
-planning (alone) 	  	  	 4			4	
-total (including meetings) 	 58			58 	  	 
+meetings                        4              4
+coding                         40             40 	  	  	 
+writeup                        10             10
+planning (alone)                4              8	
+total (including meetings)     58             62 	  	 
 
 
 (3) Describe 
   (a) what the major responsibilities of each team member were;
-  pair programming
+      We discussed approaches through meetings and chats. Both
+      of us wrote the whole thing, but after each approach, synced
+      and agreed upon one person's version.
   (b) whether or not you completed the assignment;
-  yes
+      Yes
   (c) the major strengths and weaknesses in your team, e.g. how
       your team worked together;
-  good collaboration.
+      Strengths:
+      - Good collaboration
+      - Ease of understanding each other's code
+      - Speed
+      Weaknesses:
+      - More meetings (maybe) could have helped.
   (d) the lessons learned from these events; 
-  working together is fun!
+      Working together is fun!
   (e) whether and how you plan to change the way your work together and 
-  NA
+      More meetings
   (f) anything else that comes to mind.
-  NA
+      No
