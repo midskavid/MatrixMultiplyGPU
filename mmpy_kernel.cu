@@ -31,37 +31,37 @@ __global__ void matMul(int N, _DOUBLE_ *C, _DOUBLE_ *A, _DOUBLE_ *B) {
 
     if (!(N&(N-1))) { // powers of 2
         int nBLOCK_SIZE = N/BLOCK_SIZE;
-        #pragma unroll 4
+        #pragma unroll
         for (unsigned int kk=0;kk<nBLOCK_SIZE;++kk) {
             As0[ty][tx] = A[I0*N + kk*BLOCK_SIZE+tx];
-            As0[ty+16][tx] = A[I1*N + kk*BLOCK_SIZE+tx];
-            As0[ty+32][tx] = A[I2*N + kk*BLOCK_SIZE+tx];
-            As0[ty+48][tx] = A[I3*N + kk*BLOCK_SIZE+tx];
+            As0[ty+BLOCK_SIZE][tx] = A[I1*N + kk*BLOCK_SIZE+tx];
+            As0[ty+2*BLOCK_SIZE][tx] = A[I2*N + kk*BLOCK_SIZE+tx];
+            As0[ty+3*BLOCK_SIZE][tx] = A[I3*N + kk*BLOCK_SIZE+tx];
 
             Bs0[ty][tx] = B[(kk*BLOCK_SIZE+ty)*N + J0];
-            Bs0[ty][tx+16] = B[(kk*BLOCK_SIZE+ty)*N + J1];
-            Bs0[ty][tx+32] = B[(kk*BLOCK_SIZE+ty)*N + J2];
-            Bs0[ty][tx+48] = B[(kk*BLOCK_SIZE+ty)*N + J3];
+            Bs0[ty][tx+BLOCK_SIZE] = B[(kk*BLOCK_SIZE+ty)*N + J1];
+            Bs0[ty][tx+2*BLOCK_SIZE] = B[(kk*BLOCK_SIZE+ty)*N + J2];
+            Bs0[ty][tx+3*BLOCK_SIZE] = B[(kk*BLOCK_SIZE+ty)*N + J3];
 
             __syncthreads();
-            #pragma unroll 16
+            #pragma unroll
             for (unsigned int k=0;k<BLOCK_SIZE;++k) {
                 Cij[0] += As0[ty][k] * Bs0[k][tx];
-                Cij[1] += As0[ty][k] * Bs0[k][tx+16];
-                Cij[2] += As0[ty][k] * Bs0[k][tx+32];
-                Cij[3] += As0[ty][k] * Bs0[k][tx+48];
-                Cij[4] += As0[ty+16][k] * Bs0[k][tx];
-                Cij[5] += As0[ty+16][k] * Bs0[k][tx+16];
-                Cij[6] += As0[ty+16][k] * Bs0[k][tx+32];
-                Cij[7] += As0[ty+16][k] * Bs0[k][tx+48];
-                Cij[8] += As0[ty+32][k] * Bs0[k][tx];
-                Cij[9] += As0[ty+32][k] * Bs0[k][tx+16];
-                Cij[10] += As0[ty+32][k] * Bs0[k][tx+32];
-                Cij[11] += As0[ty+32][k] * Bs0[k][tx+48];
-                Cij[12] += As0[ty+48][k] * Bs0[k][tx];
-                Cij[13] += As0[ty+48][k] * Bs0[k][tx+16];
-                Cij[14] += As0[ty+48][k] * Bs0[k][tx+32];
-                Cij[15] += As0[ty+48][k] * Bs0[k][tx+48];
+                Cij[1] += As0[ty][k] * Bs0[k][tx+BLOCK_SIZE];
+                Cij[2] += As0[ty][k] * Bs0[k][tx+2*BLOCK_SIZE];
+                Cij[3] += As0[ty][k] * Bs0[k][tx+3*BLOCK_SIZE];
+                Cij[4] += As0[ty+BLOCK_SIZE][k] * Bs0[k][tx];
+                Cij[5] += As0[ty+BLOCK_SIZE][k] * Bs0[k][tx+BLOCK_SIZE];
+                Cij[6] += As0[ty+BLOCK_SIZE][k] * Bs0[k][tx+2*BLOCK_SIZE];
+                Cij[7] += As0[ty+BLOCK_SIZE][k] * Bs0[k][tx+3*BLOCK_SIZE];
+                Cij[8] += As0[ty+2*BLOCK_SIZE][k] * Bs0[k][tx];
+                Cij[9] += As0[ty+2*BLOCK_SIZE][k] * Bs0[k][tx+BLOCK_SIZE];
+                Cij[10] += As0[ty+2*BLOCK_SIZE][k] * Bs0[k][tx+2*BLOCK_SIZE];
+                Cij[11] += As0[ty+2*BLOCK_SIZE][k] * Bs0[k][tx+3*BLOCK_SIZE];
+                Cij[12] += As0[ty+3*BLOCK_SIZE][k] * Bs0[k][tx];
+                Cij[13] += As0[ty+3*BLOCK_SIZE][k] * Bs0[k][tx+BLOCK_SIZE];
+                Cij[14] += As0[ty+3*BLOCK_SIZE][k] * Bs0[k][tx+2*BLOCK_SIZE];
+                Cij[15] += As0[ty+3*BLOCK_SIZE][k] * Bs0[k][tx+3*BLOCK_SIZE];
             }
             __syncthreads();
         }
@@ -84,37 +84,37 @@ __global__ void matMul(int N, _DOUBLE_ *C, _DOUBLE_ *A, _DOUBLE_ *B) {
     }
     else { // non-powers of 2 (with boundary checks)
         int nBLOCK_SIZE = (N/BLOCK_SIZE) + 1;
-        #pragma unroll 4
+        #pragma unroll
         for (unsigned int kk=0;kk<nBLOCK_SIZE;++kk) {
             As0[ty][tx] = (I0<N && (kk*BLOCK_SIZE+tx) < N) ? A[I0*N + kk*BLOCK_SIZE+tx] : 0;
-            As0[ty+16][tx] = (I1<N && (kk*BLOCK_SIZE+tx) < N) ? A[I1*N + kk*BLOCK_SIZE+tx] : 0;
-            As0[ty+32][tx] = (I2<N && (kk*BLOCK_SIZE+tx) < N) ? A[I2*N + kk*BLOCK_SIZE+tx] : 0;
-            As0[ty+48][tx] = (I3<N && (kk*BLOCK_SIZE+tx) < N) ? A[I3*N + kk*BLOCK_SIZE+tx] : 0;
+            As0[ty+BLOCK_SIZE][tx] = (I1<N && (kk*BLOCK_SIZE+tx) < N) ? A[I1*N + kk*BLOCK_SIZE+tx] : 0;
+            As0[ty+2*BLOCK_SIZE][tx] = (I2<N && (kk*BLOCK_SIZE+tx) < N) ? A[I2*N + kk*BLOCK_SIZE+tx] : 0;
+            As0[ty+3*BLOCK_SIZE][tx] = (I3<N && (kk*BLOCK_SIZE+tx) < N) ? A[I3*N + kk*BLOCK_SIZE+tx] : 0;
 
             Bs0[ty][tx] = ((kk*BLOCK_SIZE+ty) < N  && J0<N) ? B[(kk*BLOCK_SIZE+ty)*N + J0] : 0;
-            Bs0[ty][tx+16] = ((kk*BLOCK_SIZE+ty) < N  && J1<N) ? B[(kk*BLOCK_SIZE+ty)*N + J1] : 0;
-            Bs0[ty][tx+32] = ((kk*BLOCK_SIZE+ty) < N  && J2<N) ? B[(kk*BLOCK_SIZE+ty)*N + J2] : 0;
-            Bs0[ty][tx+48] = ((kk*BLOCK_SIZE+ty) < N  && J3<N) ? B[(kk*BLOCK_SIZE+ty)*N + J3] : 0;
+            Bs0[ty][tx+BLOCK_SIZE] = ((kk*BLOCK_SIZE+ty) < N  && J1<N) ? B[(kk*BLOCK_SIZE+ty)*N + J1] : 0;
+            Bs0[ty][tx+2*BLOCK_SIZE] = ((kk*BLOCK_SIZE+ty) < N  && J2<N) ? B[(kk*BLOCK_SIZE+ty)*N + J2] : 0;
+            Bs0[ty][tx+3*BLOCK_SIZE] = ((kk*BLOCK_SIZE+ty) < N  && J3<N) ? B[(kk*BLOCK_SIZE+ty)*N + J3] : 0;
 
             __syncthreads();
-            #pragma unroll 16  
+            #pragma unroll 
             for (unsigned int k=0;k<BLOCK_SIZE;++k) {
                 Cij[0] += As0[ty][k] * Bs0[k][tx];
-                Cij[1] += As0[ty][k] * Bs0[k][tx+16];
-                Cij[2] += As0[ty][k] * Bs0[k][tx+32];
-                Cij[3] += As0[ty][k] * Bs0[k][tx+48];
-                Cij[4] += As0[ty+16][k] * Bs0[k][tx];
-                Cij[5] += As0[ty+16][k] * Bs0[k][tx+16];
-                Cij[6] += As0[ty+16][k] * Bs0[k][tx+32];
-                Cij[7] += As0[ty+16][k] * Bs0[k][tx+48];
-                Cij[8] += As0[ty+32][k] * Bs0[k][tx];
-                Cij[9] += As0[ty+32][k] * Bs0[k][tx+16];
-                Cij[10] += As0[ty+32][k] * Bs0[k][tx+32];
-                Cij[11] += As0[ty+32][k] * Bs0[k][tx+48];
-                Cij[12] += As0[ty+48][k] * Bs0[k][tx];
-                Cij[13] += As0[ty+48][k] * Bs0[k][tx+16];
-                Cij[14] += As0[ty+48][k] * Bs0[k][tx+32];
-                Cij[15] += As0[ty+48][k] * Bs0[k][tx+48];
+                Cij[1] += As0[ty][k] * Bs0[k][tx+BLOCK_SIZE];
+                Cij[2] += As0[ty][k] * Bs0[k][tx+2*BLOCK_SIZE];
+                Cij[3] += As0[ty][k] * Bs0[k][tx+3*BLOCK_SIZE];
+                Cij[4] += As0[ty+BLOCK_SIZE][k] * Bs0[k][tx];
+                Cij[5] += As0[ty+BLOCK_SIZE][k] * Bs0[k][tx+BLOCK_SIZE];
+                Cij[6] += As0[ty+BLOCK_SIZE][k] * Bs0[k][tx+2*BLOCK_SIZE];
+                Cij[7] += As0[ty+BLOCK_SIZE][k] * Bs0[k][tx+3*BLOCK_SIZE];
+                Cij[8] += As0[ty+2*BLOCK_SIZE][k] * Bs0[k][tx];
+                Cij[9] += As0[ty+2*BLOCK_SIZE][k] * Bs0[k][tx+BLOCK_SIZE];
+                Cij[10] += As0[ty+2*BLOCK_SIZE][k] * Bs0[k][tx+2*BLOCK_SIZE];
+                Cij[11] += As0[ty+2*BLOCK_SIZE][k] * Bs0[k][tx+3*BLOCK_SIZE];
+                Cij[12] += As0[ty+3*BLOCK_SIZE][k] * Bs0[k][tx];
+                Cij[13] += As0[ty+3*BLOCK_SIZE][k] * Bs0[k][tx+BLOCK_SIZE];
+                Cij[14] += As0[ty+3*BLOCK_SIZE][k] * Bs0[k][tx+2*BLOCK_SIZE];
+                Cij[15] += As0[ty+3*BLOCK_SIZE][k] * Bs0[k][tx+3*BLOCK_SIZE];
             }
             __syncthreads();
         }
